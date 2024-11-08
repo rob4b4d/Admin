@@ -1,9 +1,9 @@
 import {Link, Navigate, Outlet} from "react-router-dom";
-import {useStateContext} from "../context/ContextProvider";
+import {useStateContext} from "../context/ContextProvider.jsx";
 import axiosClient from "../axios-client.js";
 import {useEffect} from "react";
 
-export default function DefaultLayout() {
+export default function AdminLayout() {
   const {user, token, setUser, setToken, notification} = useStateContext();
 
   if (!token) {
@@ -31,12 +31,13 @@ export default function DefaultLayout() {
     <div id="defaultLayout">
       <aside>
         <Link to="/dashboard">Dashboard</Link>
-        <Link to="/users">Users</Link>
+        <Link to="/conductor">Conductors</Link>
+        <Link to="/income">Income</Link>
       </aside>
       <div className="content">
         <header>
           <div>
-            Header
+            Admin
           </div>
 
           <div>
