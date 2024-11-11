@@ -1,53 +1,61 @@
-import {Link, Navigate, Outlet} from "react-router-dom";
-import {useStateContext} from "../context/ContextProvider.jsx";
-import axiosClient from "../axios-client.js";
-import {useEffect} from "react";
+import React, { useEffect } from 'react';
+import { Link, Navigate, Outlet } from "react-router-dom";
+import { useStateContext } from "../context/ContextProvider";
+import axiosClient from "../axios-client";
+import Sidebar from './Sidebar';
+import Header from './Header';
 
 export default function MainLayout() {
-  const {user, token, setUser, setToken, notification} = useStateContext();
+  const { user, token, setUser, setToken, notification } = useStateContext();
 
+  console.log({ user })
+
+  // Redirect to login if no token
   if (!token) {
-    return <Navigate to="/login"/>
+    return <Navigate to="/auth/login" />;
   }
 
-  const onLogout = ev => {
-    ev.preventDefault()
-
+  const onLogout = (e) => {
+    e.preventDefault();
     axiosClient.post('/logout')
       .then(() => {
-        setUser({})
-        setToken(null)
-      })
-  }
+        setUser({});
+        setToken(null);
+      });
+  };
 
   useEffect(() => {
     axiosClient.get('/user')
-      .then(({data}) => {
-         setUser(data)
-      })
-  }, [])
+      .then(({ data }) => {
+        setUser(data);
+      });
+  }, []);
 
+  // Define role-based links
+  const links = [
+    { to: '/dashboard', text: 'Dashboard', roles: [ 'admin', 'users'] },
+    { to: '/users', text: 'Users', roles: ['admin'] },
+    { to: '/conductor', text: 'Conductors', roles: ['admin', 'users'] },
+    { to: '/income', text: 'Income', roles: ['admin', 'users'] },
+  ];
+
+  // Filter links based on user's role
+  const accessibleLinks = links
+  .filter(link => !link.roles || link.roles.length === 0 || link.roles.includes(user.role))
+  .map(({ to, text }) => ({ to, text }));
+  
   return (
     <div id="defaultLayout">
-      <aside>
-        <Link to="/dashboard">Dashboard</Link>
-        <Link to="/users">Users</Link>
-        <Link to="/conductor">Conductors</Link>
-        <Link to="/income">income</Link>
-      </aside>
+      {/* Render Sidebar with accessible links */}
+      <Sidebar links={accessibleLinks} />
       <div className="content">
-        <header>
-          <div>
-            Main Admin
-          </div>
-
-          <div>
-            {user.name} &nbsp; &nbsp;
-            <a onClick={onLogout} className="btn-logout" href="#">Logout</a>
-          </div>
-        </header>
+      <Header 
+          title={user.role === 'admin' ? 'Admin' : 'User'} 
+          onLogout={(e) => onLogout(e)} 
+          name={user.name} 
+        />
         <main>
-          <Outlet/>
+          <Outlet />
         </main>
         {notification &&
           <div className="notification">
@@ -56,5 +64,5 @@ export default function MainLayout() {
         }
       </div>
     </div>
-  )
+  );
 }

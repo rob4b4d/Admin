@@ -1,73 +1,75 @@
-import {createBrowserRouter, Navigate} from "react-router-dom";
-import AdminLayout from "./components/AdminLayout";
-import LoginLayout from "./components/LoginLayout";
-import MainLayout from "./components/MainLayout";
-import Dashboard from "./views/Dashboard";
-import Login from "./views/Login";
-import NotFound from "./views/NotFound";
-import Signup from "./views/Signup";
-import Users from "./views/Users";
-import UserForm from "./views/UserForm";
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import LoginLayout from './components/LoginLayout';
+import MainLayout from './components/MainLayout';
+//import Conductor from './views/Conductor';
+import Dashboard from './views/Dashboard';
+import Login from './views/Login';
+import NotFound from './views/NotFound';
+import Signup from './views/Signup';
+import Users from './views/Users';
+import UserForm from './views/UserForm';
+import ProtectedRoute from './components/ProtectedRoute';  // Import ProtectedRoute
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <MainLayout/>,
+    path: '/',  // Main application path
+    element: <MainLayout />,
     children: [
+      { path: '', element: <Navigate to='/dashboard' /> },  // Redirect to /dashboard
       {
-        path: '/',
-        element: <Navigate to="/dashboard"/>
+        path: 'dashboard',
+        element: (
+          <ProtectedRoute roles={['admin', 'users']}>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
       },
       {
-        path: '/dashboard',
-        element: <Dashboard/>
+        path: 'users',
+        element: (
+          <ProtectedRoute roles={['admin']}>
+            <Users />
+          </ProtectedRoute>
+        ),
       },
       {
-        path: '/users',
-        element: <Users/>
+        path: 'users/new',
+        element: (
+          <ProtectedRoute roles={['admin']}>
+            <UserForm key='userCreate' />
+          </ProtectedRoute>
+        ),
       },
       {
-        path: '/users/new',
-        element: <UserForm key="userCreate" />
+        path: 'users/:id',
+        element: (
+          <ProtectedRoute roles={['admin']}>
+            <UserForm key='userUpdate' />
+          </ProtectedRoute>
+        ),
       },
-      {
-        path: '/users/:id',
-        element: <UserForm key="userUpdate" />
-      }
-    ]
+     /* {
+        path: 'conductor',
+        element: (
+          <ProtectedRoute roles={['admin']}>
+            <Conductor />
+          </ProtectedRoute>
+        )
+      },*/
+    ],
   },
   {
-    path: '/',
-    element: <AdminLayout/>,
+    path: '/auth',  // Auth path for login/signup
+    element: <LoginLayout />,
     children: [
-      {
-        path: '/',
-        element: <Navigate to="/dashboard"/>
-      },
-      {
-        path: '/dashboard',
-        element: <Dashboard/>
-      },
-    ]
+      { path: 'login', element: <Login /> },
+      { path: 'signup', element: <Signup /> },
+    ],
   },
   {
-    path: '/',
-    element: <LoginLayout/>,
-    children: [
-      {
-        path: '/login',
-        element: <Login/>
-      },
-      {
-        path: '/signup',
-        element: <Signup/>
-      }
-    ]
+    path: '*',
+    element: <NotFound />,
   },
-  {
-    path: "*",
-    element: <NotFound/>
-  }
-])
+]);
 
 export default router;

@@ -79,6 +79,7 @@ button,
     color: #212121;
     transition: all 0.3s;
     border-radius: 8px;
+    background-color: white;
 }
 
 .btn-logout:hover {

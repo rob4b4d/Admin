@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import '../index.css'; // Ensure this file includes your styles
+import DataTable from '../components/Table';
 
 function Dashboard() {
   const [data, setData] = useState([]);
@@ -38,6 +39,22 @@ function Dashboard() {
     ]);
   }, []);
 
+  // const data = [
+  //   { date: '2024-11-01', busNo: '101', username: 'user1', route: 'Route A', total: '100' },
+  //   { date: '2024-11-02', busNo: '102', username: 'user2', route: 'Route B', total: '120' },
+  //   // More rows can go here
+  // ];
+
+  const columnKeyMapping = {
+    'DATE': 'date',
+    'BUS NO.': 'busNo',
+    'USERNAME': 'username',
+    'ROUTE': 'route',
+    'TOTAL': 'total',
+  };
+
+  const columns = ['DATE', 'BUS NO.', 'USERNAME', 'ROUTE', 'TOTAL'];
+
   return (
     <div className="dashboard">
       <main className="main-content">
@@ -46,28 +63,7 @@ function Dashboard() {
         {data.length === 0 ? (
           <p>No data available</p>
         ) : (
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>DATE</th>
-                <th>BUS NO.</th>
-                <th>USERNAME</th>
-                <th>ROUTE</th>
-                <th>TOTAL</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.date}</td>
-                  <td>{item.busNo}</td>
-                  <td>{item.username}</td>
-                  <td>{item.route}</td>
-                  <td>{item.total}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <DataTable columns={columns} data={data} columnKeyMapping={columnKeyMapping} />
         )}
       </main>
     </div>

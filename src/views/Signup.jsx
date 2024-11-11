@@ -14,9 +14,11 @@ export default function Signup() {
   const [formErrors, setFormErrors] = useState({
     name: '',
     email: '',
+    role: '',
     password: '',
     passwordConfirmation: '',
   });
+  const [role] = useState('admin')
 
   // Email validation regex
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -72,20 +74,28 @@ export default function Signup() {
     const payload = {
       name,
       email,
+      role: role,
       password,
       password_confirmation: passwordConfirmation,
     };
 
     axiosClient
-      .post("/signup", payload)
+      .post('/signup', payload)
       .then(({ data }) => {
         setUser(data.user);
         setToken(data.token);
       })
       .catch((err) => {
         const response = err.response;
-        if (response && response.status === 422) {
-          setErrors(response.data.errors);
+        if (response) {
+          if (response.status === 500) {
+            // Handle server error (e.g., log it or show a specific message)
+            setErrors({ general: "Server error. Please try again later." });
+            return;
+          } else if (response.status === 422) {
+            // Handle validation errors from the backend
+            setErrors(response.data.errors);
+          }
         }
       });
   };
@@ -127,7 +137,7 @@ export default function Signup() {
           <input ref={passwordConfirmationRef} type="password" placeholder="Repeat Password" />
           <button className="btn btn-block">Signup</button>
           <p className="message">
-            Already registered? <Link to="/login">Sign In</Link>
+            Already registered? <Link to="/auth/login">Sign In</Link>
           </p>
         </form>
       </div>
