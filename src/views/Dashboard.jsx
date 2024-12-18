@@ -1,69 +1,111 @@
 import { useState, useEffect } from 'react';
-import '../index.css'; // Ensure this file includes your styles
-import DataTable from '../components/Table';
+import '../index.css';
+import axiosClient from '../axios-client';
 
 function Dashboard() {
   const [data, setData] = useState([]);
+  const [processedData, setProcessedData] = useState([]);
 
-  // Sample data for demonstration (remove when using API)
+  // Get the current date in the format YYYY-MM-DD
+  const currentDate = new Date().toISOString().split('T')[0];
+
+  // Fetch data on component mount
   useEffect(() => {
-    setData([
-      {
-        date: '2024-11-01',
-        busNo: 'A123',
-        username: 'john_doe',
-        route: 'Route 1',
-        total: 45,
-      },
-      {
-        date: '2024-11-01',
-        busNo: 'B456',
-        username: 'jane_smith',
-        route: 'Route 2',
-        total: 38,
-      },
-      {
-        date: '2024-11-02',
-        busNo: 'C789',
-        username: 'mark_jones',
-        route: 'Route 3',
-        total: 50,
-      },
-      {
-        date: '2024-11-02',
-        busNo: 'D012',
-        username: 'emily_davis',
-        route: 'Route 4',
-        total: 42,
-      },
-    ]);
+    const fetchDailyFares = async () => {
+      try {
+        const response = await axiosClient.get('/reports'); // Correct endpoint
+        console.log('Fetched data:', response.data); // Debug response
+        setData(response.data); // Update state with fetched data
+      } catch (error) {
+        console.error('Error fetching daily fares:', error);
+      }
+    };
+
+    fetchDailyFares();
   }, []);
 
-  // const data = [
-  //   { date: '2024-11-01', busNo: '101', username: 'user1', route: 'Route A', total: '100' },
-  //   { date: '2024-11-02', busNo: '102', username: 'user2', route: 'Route B', total: '120' },
-  //   // More rows can go here
-  // ];
+  console.log({ data: data });
 
-  const columnKeyMapping = {
-    'DATE': 'date',
-    'BUS NO.': 'busNo',
-    'USERNAME': 'username',
-    'ROUTE': 'route',
-    'TOTAL': 'total',
-  };
+  useEffect(() => {
+    const processFares = () => {
+      const groupedData = {};
 
-  const columns = ['DATE', 'BUS NO.', 'USERNAME', 'ROUTE', 'TOTAL'];
+      // Filter data to include only the current date
+      const filteredData = data.filter(item => item.date === currentDate);
+
+      filteredData.forEach((item) => {
+        const { username, bus_num, route, regular_total, discounted_total, date } = item;
+
+        const key = `${bus_num}-${username}-${date}`; // Create a unique key for each bus, username, and date combination
+
+        if (!groupedData[key]) {
+          groupedData[key] = {
+            bus_num,
+            username,
+            date,
+            routeCount: 0, // Track the number of route entries
+            total: 0,
+          };
+        }
+
+        groupedData[key].routeCount += 1; // Increment route count for each entry
+        groupedData[key].total += parseFloat(regular_total) + parseFloat(discounted_total); // Aggregate fare totals
+      });
+
+      // Convert grouped data to an array
+      const result = Object.values(groupedData).map((entry) => ({
+        'BUS NO.': entry.bus_num,
+        USERNAME: entry.username,
+        DATE: entry.date, // Include date in the processed data
+        'ROUTE COUNT': entry.routeCount, // Use route count instead of Set size
+        TOTAL: entry.total.toFixed(2),
+      }));
+
+      // Sort the result array by date in ascending order (latest to oldest)
+      result.sort((a, b) => {
+        const dateA = new Date(a.DATE);
+        const dateB = new Date(b.DATE);
+        return dateB - dateA; // Sort in descending order (latest to oldest)
+      });
+
+      console.log('Processed and sorted data:', result); // Debug processed and sorted data
+      setProcessedData(result);
+    };
+
+    if (data.length > 0) {
+      processFares();
+    }
+  }, [data, currentDate]); // Add currentDate as a dependency to ensure it updates when the date changes
 
   return (
     <div className="dashboard">
       <main className="main-content">
         <h1>Daily Counts</h1>
-        {/* Display a message if there's no data */}
-        {data.length === 0 ? (
-          <p>No data available</p>
+        {processedData.length === 0 ? (
+          <p>No data available for today</p>
         ) : (
-          <DataTable columns={columns} data={data} columnKeyMapping={columnKeyMapping} />
+          <table>
+            <thead>
+              <tr>
+                <th>BUS NO.</th>
+                <th>USERNAME</th>
+                <th>DATE</th>
+                <th>ROUTE COUNT</th>
+                <th>TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {processedData.map((row, index) => (
+                <tr key={index}>
+                  <td>{row['BUS NO.']}</td>
+                  <td>{row.USERNAME}</td>
+                  <td>{row.DATE}</td>
+                  <td>{row['ROUTE COUNT']}</td>
+                  <td>{row.TOTAL}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </main>
     </div>

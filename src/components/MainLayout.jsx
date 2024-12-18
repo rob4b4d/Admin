@@ -29,14 +29,15 @@ export default function MainLayout() {
       .then(({ data }) => {
         setUser(data);
       });
-  }, []);
+  }, []); 
 
   // Define role-based links
   const links = [
-    { to: '/dashboard', text: 'Dashboard', roles: [ 'admin', 'users'] },
-    { to: '/users', text: 'Users', roles: ['admin'] },
-    { to: '/conductor', text: 'Conductors', roles: ['admin', 'users'] },
-    { to: '/income', text: 'Income', roles: ['admin', 'users'] },
+    { to: '/dashboard', text: 'Daily Routes', roles: [ 'admin', 'subadmin'] },
+    { to: '/users', text: 'Admins', roles: ['admin'] },
+    { to: '/conductor', text: 'Conductors', roles: ['admin', 'subadmin'] },
+    { to: '/fare-location', text: 'Fare Management', roles: ['admin', 'subadmin'] },
+    { to: '/income', text: 'Income', roles: ['admin', 'subadmin'] },
   ];
 
   // Filter links based on user's role

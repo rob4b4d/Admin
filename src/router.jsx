@@ -1,14 +1,19 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import LoginLayout from './components/LoginLayout';
 import MainLayout from './components/MainLayout';
-//import Conductor from './views/Conductor';
+import Conductor from './views/Conductor';
 import Dashboard from './views/Dashboard';
 import Login from './views/Login';
 import NotFound from './views/NotFound';
 import Signup from './views/Signup';
-import Users from './views/Users';
+import Users from './views/SubAdmin';
 import UserForm from './views/UserForm';
+import ForgotPassword from './views/ForgotPassword';
+import ResetPassword from './views/ResetPassword';
 import ProtectedRoute from './components/ProtectedRoute';  // Import ProtectedRoute
+import Loader from './app/Loader.jsx/Loader';
+import FareLocation from './views/FareLocation';
+import Income from './views/Income';
 
 const router = createBrowserRouter([
   {
@@ -19,7 +24,7 @@ const router = createBrowserRouter([
       {
         path: 'dashboard',
         element: (
-          <ProtectedRoute roles={['admin', 'users']}>
+          <ProtectedRoute roles={['admin', 'subadmin']}>
             <Dashboard />
           </ProtectedRoute>
         ),
@@ -27,7 +32,7 @@ const router = createBrowserRouter([
       {
         path: 'users',
         element: (
-          <ProtectedRoute roles={['admin']}>
+          <ProtectedRoute roles={['admin',]}>
             <Users />
           </ProtectedRoute>
         ),
@@ -35,7 +40,7 @@ const router = createBrowserRouter([
       {
         path: 'users/new',
         element: (
-          <ProtectedRoute roles={['admin']}>
+          <ProtectedRoute roles={['admin', 'subadmin']}>
             <UserForm key='userCreate' />
           </ProtectedRoute>
         ),
@@ -43,19 +48,35 @@ const router = createBrowserRouter([
       {
         path: 'users/:id',
         element: (
-          <ProtectedRoute roles={['admin']}>
+          <ProtectedRoute roles={['admin', 'subadmin']}>
             <UserForm key='userUpdate' />
           </ProtectedRoute>
         ),
       },
-     /* {
+      {
         path: 'conductor',
         element: (
-          <ProtectedRoute roles={['admin']}>
+          <ProtectedRoute roles={['admin', 'subadmin']}>
             <Conductor />
           </ProtectedRoute>
         )
-      },*/
+      },  
+      {
+        path: 'fare-location',
+        element: (
+          <ProtectedRoute roles={['admin', 'subadmin']}>
+            <FareLocation />
+          </ProtectedRoute>
+        )
+      }, 
+      {
+        path: 'income',
+        element: (
+          <ProtectedRoute roles={['admin', 'subadmin']}>
+            <Income />
+          </ProtectedRoute>
+        )
+      }, 
     ],
   },
   {

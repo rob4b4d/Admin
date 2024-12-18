@@ -505,3 +505,190 @@ table > tbody > tr > td {
     border: 1px solid #2ecc71;
   }
   
+
+  /* General form group styling */
+.form-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Styling for the select dropdown */
+  .form-control {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  .form-control:focus {
+    outline: none;
+    border-color: #007bff; /* Add focus color (e.g., blue) */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  /* Add a consistent placeholder style for the disabled default option */
+  .form-control option[value=""] {
+    color: #999;
+  }
+  
+
+  /* General Fare Location Styles */
+.fare-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background-color: #f7f7f7;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.fare-main {
+  width: 100%;
+  max-width: 1400px;
+  background-color: #fff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 40px;
+}
+
+.fare-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #333;
+  letter-spacing: 1px;
+}
+
+.fare-no-data {
+  font-size: 1.5rem;
+  color: #777;
+  text-align: center;
+  font-weight: 500;
+  margin-top: 20px;
+}
+
+.fare-card {
+  background-color: #f9fafb;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.fare-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.fare-input {
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  transition: border 0.3s ease;
+}
+
+.fare-input:focus {
+  outline: none;
+  border: 1px solid #1e3a8a;
+}
+
+.fare-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #1e3a8a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.fare-button:hover {
+  background-color: #3657c3;
+}
+
+.fare-button-edit {
+  background-color: #34d399; /* Green for Edit */
+}
+
+.fare-button-edit:hover {
+  background-color: #22c55e;
+}
+
+.fare-button-delete {
+  background-color: #ef4444; /* Red for Delete */
+}
+
+.fare-button-delete:hover {
+  background-color: #dc2626;
+}
+
+.fare-list {
+  list-style: none;
+  padding: 0;
+}
+
+.fare-list-item {
+  margin-bottom: 20px;
+}
+
+.fare-card strong {
+  font-size: 1.25rem;
+  color: #1e3a8a;
+}
+
+.fare-card p {
+  margin: 5px 0;
+  color: #444;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .fare-container {
+    padding: 10px;
+  }
+
+  .fare-main {
+    padding: 20px;
+  }
+
+  .fare-input {
+    padding: 10px;
+  }
+
+  .fare-button {
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fare-container {
+    padding: 5px;
+  }
+
+  .fare-main {
+    padding: 15px;
+  }
+
+  .fare-input {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .fare-button {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+}
