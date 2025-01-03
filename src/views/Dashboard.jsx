@@ -58,7 +58,7 @@ function Dashboard() {
         USERNAME: entry.username,
         DATE: entry.date, // Include date in the processed data
         'ROUTE COUNT': entry.routeCount, // Use route count instead of Set size
-        TOTAL: entry.total.toFixed(2),
+        TOTAL: `₱${entry.total.toFixed(2)}`, // Add peso sign here
       }));
 
       // Sort the result array by date in ascending order (latest to oldest)
